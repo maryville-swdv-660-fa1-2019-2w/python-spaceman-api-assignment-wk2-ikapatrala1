@@ -31,16 +31,15 @@ class GameApiViewTests( TestCase ):
 
         self.expected_game_solution = {
             'solution': "batman"
-        }    
+        }
 
         self.mock_game_solution = Game(
                 word = self.expected_game_solution['solution']
             )
 
-        
+
         self.request_factory = APIRequestFactory()
         self.mock_get_request = self.request_factory.get('dummy')
-        
 
 
     ### POST (create game) view
@@ -79,10 +78,7 @@ class GameApiViewTests( TestCase ):
 
 
     ### GET solution view
-    # TODO: Add tests for Getting a game's solution
-    # HINT: remember the `setUp` fixture that is in this test class, 
-    #   it constructs things that might be useful
-
+   
     def test_game_solution_respond_with_404_when_game_not_found( self ):
         with patch.object( Game.objects, 'get' ) as mock_get:
             mock_get.side_effect = Game.DoesNotExist
