@@ -29,15 +29,25 @@ class GameApiViewTests( TestCase ):
                 is_game_over = self.expected_game_data['is_game_over']
             )
 
+        self.expected_game_solution = {
+            'solution': "batman"
+        }    
+
+        self.mock_game_solution = Game(
+                word = self.expected_game_solution['solution']
+            )
+
+        
         self.request_factory = APIRequestFactory()
         self.mock_get_request = self.request_factory.get('dummy')
+        
 
 
     ### POST (create game) view
     def test_game_view_should_create_new_game_on_POST( self ):
         response = game_view( self.request_factory.post('dummy') )
 
-        self.assertEquals( response.status_code, 200)
+        self.assertEqual( response.status_code, 200)
         self.assertIsNotNone( response.data['id'] )
         self.assertTrue( response.data['id'] >= 0 )
 
@@ -52,8 +62,8 @@ class GameApiViewTests( TestCase ):
             response = game_view( mock_request, 25 )
             
             mock_get.assert_called_with( pk=25 )
-            self.assertEquals( response.status_code, 200 )
-            self.assertEquals( response.data['letters_guessed'], ['A','B'])
+            self.assertEqual( response.status_code, 200 )
+            self.assertEqual( response.data['letters_guessed'], ['A','B'])
 
     def test_game_view_should_reject_PUT_if_invalid( self ):
         with patch.object( Game.objects, 'get' ) as mock_get:
@@ -65,11 +75,34 @@ class GameApiViewTests( TestCase ):
             response = game_view( mock_request, 25 )
             
             mock_get.assert_called_with( pk=25 )
-            self.assertEquals( response.status_code, 400 )
+            self.assertEqual( response.status_code, 400 )
 
 
     ### GET solution view
     # TODO: Add tests for Getting a game's solution
     # HINT: remember the `setUp` fixture that is in this test class, 
     #   it constructs things that might be useful
+
+    def test_game_solution_respond_with_404_when_game_not_found( self ):
+        with patch.object( Game.objects, 'get' ) as mock_get:
+            mock_get.side_effect = Game.DoesNotExist
+
+        response = game_solution(self.mock_get_request,22)
+        self.assertEqual(response.status_code,404)
+
+
+    def test_game_solution_should_respond_with_solution_on_get( self ):
+        with patch.object( Game.objects, 'get' ) as mock_get:
+            mock_get.return_value = self.mock_game_solution
+
+            response = game_solution(self.mock_get_request, 22)
+
+            mock_get.assert_called_with( pk=22 )
+
+            self.assertEqual(response.status_code,200)
+            print(response.data)
+            self.assertDictEqual(response.data,self.expected_game_solution)
+
+        
+
 
