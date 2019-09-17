@@ -155,18 +155,59 @@ class GameModelTests( TestCase ):
         self.assertEquals( game.letters_guessed, expectedLettersGuessed )
 
     ### is_game_over field
-    # TODO: add tests
-    # HINT: considering adding a fixture or other widely scoped variables if you feel ]hat will
-    #  make this easier
-
+    
     def test_is_game_over_is_false_if_guesses_left( self ):
-        pass
+        initialLettersGuessed = ['H', 'E', 'L']
+        game = Game( 
+            word= 'HELLO',
+            guessed_word_state= ['H','E','L','L',''],
+            letters_guessed = initialLettersGuessed.copy(),
+            guesses_allowed= 5, 
+            guesses_taken= 2
+        )
+
+        guess = 'N'
+        game.handleGuess(guess)
+        self.assertEqual( game.is_game_over, False )
 
     def test_is_game_over_is_false_if_not_all_letters_guessed( self ):
-        pass
+        initialLettersGuessed = ['H', 'E']
+        game = Game( 
+            word= 'HELLO',
+            guessed_word_state= ['H','E','','',''],
+            letters_guessed = initialLettersGuessed.copy(),
+            guesses_allowed= 5, 
+            guesses_taken= 2
+        )
+
+        guess = 'L'
+        game.handleGuess(guess)
+        self.assertEqual( game.is_game_over, False )
 
     def test_is_game_over_is_true_if_no_guesses_left( self ):
-        pass
+        initialLettersGuessed = ['H', 'E', 'L']
+        game = Game( 
+            word= 'HELLO',
+            guessed_word_state= ['H','E','L','L',''],
+            letters_guessed = initialLettersGuessed.copy(),
+            guesses_allowed= 5, 
+            guesses_taken= 4
+        )
+
+        guess = 'N'
+        game.handleGuess(guess)
+        self.assertEqual( game.is_game_over, True )
 
     def test_is_game_over_is_true_if_all_letters_guessed( self ):
-        pass
+        initialLettersGuessed = ['H', 'E', 'L']
+        game = Game( 
+            word= 'HELLO',
+            guessed_word_state= ['H','E','L','L',''],
+            letters_guessed = initialLettersGuessed.copy(),
+            guesses_allowed= 5, 
+            guesses_taken= 2
+        )
+
+        guess = 'O'
+        game.handleGuess(guess)
+        self.assertEqual( game.is_game_over, True )
