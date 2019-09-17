@@ -21,8 +21,7 @@ CREATE DATABASE spaceman_game
     LC_COLLATE = 'C'
     LC_CTYPE = 'C'
     TABLESPACE = pg_default
-    CONNECTION LIMIT = -1
-	TEMPLATE template0;
+    CONNECTION LIMIT = -1;
 
 GRANT ALL ON DATABASE spaceman_game TO postgres;
 
